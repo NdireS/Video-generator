@@ -40,6 +40,8 @@ Inside a scene, local time = absolute time − the scene's `data-start`. For eve
 tl.fromTo("#circle-weddings", { scale: 0.6, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.45, ease: "back.out(1.6)" }, 1.16);
 ```
 
+A `fromTo` renders its from-state from the start of the scene. When that state is visible (a tap ring at `opacity: 0.9`, a flash) and the tween starts later, add `immediateRender: false`, or it shows before its moment.
+
 Write a comment with the word and absolute time next to each such tween, so a retime can be followed by a quick re-sync. Sound effects that belong to a visual action are already at the word's time; animate the action to match the sound's `start` in `timing.json`.
 
 Music beats: the cue preset (`plan.json` → `music.cues`) lists beats and strong cues. Cuts and big reveals that aren't tied to a word should land on a strong cue.
