@@ -3,8 +3,8 @@
   "business": {
     "name": "Faith Pastries",
     "slug": "faith-pastries",
-    "url": "https://faithpastries.co.ke",
-    "socials": { "instagram": "https://instagram.com/faithpastries" },
+    "url": "https://www.example.com",
+    "socials": { "instagram": "https://www.instagram.com/example" },
     "one_liner": "Custom cakes in Juja, ordered straight to Faith on WhatsApp."
   },
   "style": "launch",
@@ -80,7 +80,7 @@
       "lead_in": 0.4,
       "tail": 1.2,
       "visual": "Oxblood flood, Faith Pastries wordmark, web address.",
-      "on_screen_text": ["Faith Pastries", "faithpastries.co.ke"],
+      "on_screen_text": ["Faith Pastries", "example.com"],
       "effects": ["colour flood", "wordmark settle"],
       "vo": [
         { "id": "VO04", "text": "Faith Pastries. Order today.", "direction": "warm sign-off, slower", "pronounce": { "Faith Pastries": "FAYTH PAY-stries" } }
@@ -101,5 +101,5 @@
     }
   ],
   "captions": { "enabled": false },
-  "cta": { "text": "Order today", "url": "faithpastries.co.ke" }
+  "cta": { "text": "Order today", "url": "example.com" }
 }

@@ -48,11 +48,15 @@ Leave `--style` out and Scorp1 recommends one from its research.
 
 ## Install (once, works from every folder)
 
-The repo lives at `C:\Users\ndire\Documents\Scorp1`. It is installed as a plugin at user level in both tools.
+Clone the repo once, anywhere you like, then install it as a user-level plugin in either tool or both:
+
+```bash
+git clone https://github.com/NdireS/Video-generator.git
+```
 
 **Claude Code**
 ```bash
-claude plugin marketplace add "C:\Users\ndire\Documents\Scorp1"
+claude plugin marketplace add ./Video-generator
 ```
 ```bash
 claude plugin install scorp1@scorp1 --scope user
@@ -61,23 +65,21 @@ Claude Code reads the plugin straight from the repo folder, so edits take effect
 
 **Codex**
 ```bash
-codex plugin marketplace add "C:\Users\ndire\Documents\Scorp1"
+codex plugin marketplace add ./Video-generator
 ```
 ```bash
 codex plugin add scorp1@scorp1
 ```
 Codex keeps a copy in `~/.codex/plugins/cache/scorp1/`. After you edit the repo, run `codex plugin add scorp1@scorp1` again (bump `version` in `.codex-plugin/plugin.json` if it doesn't pick the change up).
 
-Brag stays installed alongside it, untouched.
-
 ## How to use it: Claude Code
 
 1. **Open any folder** where you want the videos to live (each business gets `scorp1-output/<business>/…` there), and start Claude Code.
 2. **Ask for the advert:**
    ```
-   /scorp1 https://faithpastries.co.ke https://instagram.com/faithpastries --style launch --format vertical --duration 30
+   /scorp1 https://stavore.com --style product --format vertical --duration 30
    ```
-   Or in plain words: *"Make a product advert for the red velvet cake from faithpastries.co.ke"*. Add any direction after the options ("Sheng is fine", "aim at uni students").
+   Or in plain words: *"Make an advert video for stavore.com"*. Socials work too: add the business's Instagram, TikTok or Facebook links after the website. Scorp1 also searches the web for the business by name. Add any direction after the options ("Sheng is fine", "aim at uni students").
 3. **Help it read the socials.** If Instagram, TikTok or Facebook block reading, Scorp1 asks for screenshots of the profile and top posts. Drop them in `research/inbox/` inside the run folder.
 4. **Choose or confirm the style** when it recommends one.
 5. **Read the brief.** You get the storyboard, the script lines, and `audio-pack/README.md`. Change any line now; it rebuilds the pack.
@@ -96,7 +98,7 @@ Other commands: `/scorp1 status` (where every run stands and what is missing), `
 The same flow; the skill is called with `$` instead of `/`:
 
 1. Open your working folder in Codex.
-2. `$scorp1 https://faithpastries.co.ke --style product --product "red velvet cake"`, or just ask "make an advert video for this business: <link>" (Codex picks the skill from its description).
+2. `$scorp1 https://stavore.com --style product`, or just ask "make an advert video for this business: <link>" (Codex picks the skill from its description).
 3. Follow the brief, make the audio in ElevenLabs, drop the files in `audio-in/`.
 4. `$scorp1 render`.
 5. Approve the draft, then get the final.
@@ -114,6 +116,8 @@ Everything you need is in `audio-pack/README.md`, written for that advert. In sh
 4. **Custom sounds** (optional): paste each prompt into *Sound Effects* and save as `SFX01.mp3`, … Skip any and Scorp1 uses its built-in library.
 5. **Music** (only if the pack asks): generate in *Music* and save as `music.mp3`.
 6. Put everything in the run's `audio-in/` folder and run `/scorp1 render`.
+
+Any other voice tool works the same way (a local text-to-speech app, your own recording): save one file per line as `VO01`, `VO02`, … in `audio-in/`.
 
 Silence at the start or end of a file and uneven loudness don't matter: Scorp1 trims and levels every file, transcribes it to check it matches the script, and lines up the picture and sound effects with the exact words.
 
@@ -139,8 +143,14 @@ Or ask: *"Make a new Scorp1 style called `luxury` for high-end fashion: slow, bl
 | `estimate` | Times the plan from word counts before any audio exists |
 | `ingest` | Trims, levels (−16 LUFS) and transcribes your files; splits a single take into lines; checks each line against the script |
 | `retime` | Times every scene, line, sound effect and the music duck from the real audio; copies the audio into the composition and writes the `<audio>` tags |
-| `captions` | Writes `captions.srt` and caption groups from the heard words |
+| `captions` | Writes `captions.srt` and caption groups: the script's spelling at the heard word times |
 | `styles` | Lists installed styles |
+
+Tests for the timing helpers: `python tests/test_scorp1.py`.
+
+## Example
+
+Tested end to end on [stavore.com](https://stavore.com) in October 2026. Scorp1 read the website and searched the web; it found no social accounts, so the advert is built from the site's own screens, logo and colours. The run used the `product` style and six voice lines, and produced a 27-second 1080×1920 video with music, seven sound effects and word-by-word captions.
 
 ## Repo layout
 
@@ -157,6 +167,7 @@ skills/
   scorp1-story/
   scorp1-proof/
   scorp1-howto/
+tests/                   timing helper tests (python tests/test_scorp1.py)
 ```
 
 ## Credits

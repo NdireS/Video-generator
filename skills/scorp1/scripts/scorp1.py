@@ -336,6 +336,11 @@ def cmd_pack(a) -> None:
     run_dir = a.run
     plan = load_plan(run_dir)
     state = load_state(run_dir)
+    # the plan wins over init's guesses (init may have run with --style tbd)
+    fmt = plan["format"]
+    state["style"] = plan["style"]
+    state["options"].update(format=fmt.get("aspect"), width=fmt.get("width"), height=fmt.get("height"),
+                            duration=plan.get("target_duration"), voice=voice_mode(plan))
     pack = run_dir / "audio-pack"
     voice = plan.get("voice", {})
     model = voice.get("model", "eleven_multilingual_v2")
@@ -482,6 +487,40 @@ def pack_readme(plan: dict, lines: list, custom: list, est_total: float) -> str:
 
 # ---------------------------------------------------------------- timing
 
+def align_script(text: str, heard: list[dict]) -> list[dict]:
+    """The script's words with the heard timings, so captions and anchors spell names as written."""
+    toks = text.split()
+    if not heard or not toks:
+        return heard
+
+    want, want_of = "", []
+    for i, t in enumerate(toks):
+        k = "".join(words_of(t))
+        want += k
+        want_of += [i] * len(k)
+    got, got_t = "", []  # every heard letter gets its slice of its word's time
+    for w in heard:
+        k = "".join(words_of(w["text"])) or "_"
+        step = (w["end"] - w["start"]) / len(k)
+        got += k
+        got_t += [(w["start"] + step * n, w["start"] + step * (n + 1)) for n in range(len(k))]
+    # letter-level alignment survives split words ("short-stay"), merged ones ("stavore dot com" heard
+    # as "stavor.com") and misspelled names
+    spans = {}
+    for a, b, n in difflib.SequenceMatcher(None, want, got, autojunk=False).get_matching_blocks():
+        for x in range(n):
+            i, (s, e) = want_of[a + x], got_t[b + x]
+            spans[i] = (min(spans.get(i, (s, e))[0], s), max(spans.get(i, (s, e))[1], e))
+    out = [{"text": t, "start": spans[i][0] if i in spans else None,
+            "end": spans[i][1] if i in spans else None} for i, t in enumerate(toks)]
+    for i, o in enumerate(out):  # a script word nobody heard sits in the gap between its neighbours
+        if o["start"] is None:
+            prev = next((out[k]["end"] for k in range(i - 1, -1, -1) if out[k]["end"] is not None), heard[0]["start"])
+            nxt = next((out[k]["start"] for k in range(i + 1, len(out)) if out[k]["start"] is not None), heard[-1]["end"])
+            o["start"], o["end"] = prev, max(prev, nxt)
+    return out
+
+
 def resolve_timing(plan: dict, vo_info: dict, estimated: bool, music_cues: dict) -> dict:
     """vo_info: id -> {"duration": s, "file": str|None, "words": [{text,start,end}] relative}"""
     fps = plan["format"].get("fps", 30)
@@ -502,11 +541,15 @@ def resolve_timing(plan: dict, vo_info: dict, estimated: bool, music_cues: dict)
                 continue
             vstart = snap_frame(t, fps)
             dur = info["duration"]
-            words = [{"text": w["text"], "start": r3(vstart + w["start"]), "end": r3(vstart + w["end"])}
-                     for w in info.get("words", [])]
+            def timed(text):
+                return [{"text": w["text"], "start": r3(vstart + w["start"]), "end": r3(vstart + w["end"])}
+                        for w in align_script(text, info.get("words", []))]
+            words = timed(line["text"])
             vo_out.append({"id": line["id"], "scene": scene["id"], "file": info.get("file"),
                            "start": r3(vstart), "duration": r3(dur), "end": r3(vstart + dur),
                            "text": line["text"], "words": words})
+            if line.get("caption"):  # written form for the screen ("stavore.com" for "stavore dot com")
+                vo_out[-1].update(caption=line["caption"], caption_words=timed(line["caption"]))
             vo_ids.append(line["id"])
             last_end = vstart + dur
             t = last_end + line.get("gap_after", gap)
@@ -963,13 +1006,17 @@ def srt_time(t: float) -> str:
 def caption_groups(timing: dict, max_words: int = 6, max_len: float = 2.6) -> list[dict]:
     groups = []
     for v in timing["vo"]:
-        words = v["words"] or [{"text": t, "start": v["start"] + v["duration"] * i / max(1, len(v["text"].split())),
-                                "end": v["start"] + v["duration"] * (i + 1) / max(1, len(v["text"].split()))}
-                               for i, t in enumerate(v["text"].split())]
+        text = v.get("caption") or v["text"]
+        words = v.get("caption_words") or v["words"] or [
+            {"text": t, "start": v["start"] + v["duration"] * i / max(1, len(text.split())),
+             "end": v["start"] + v["duration"] * (i + 1) / max(1, len(text.split()))}
+            for i, t in enumerate(text.split())]
         cur = []
-        for w in words:
+        for k, w in enumerate(words):
             cur.append(w)
-            end_here = (len(cur) >= max_words or cur[-1]["end"] - cur[0]["start"] >= max_len
+            nxt = words[k + 1]["text"] if k + 1 < len(words) else ""
+            too_long = len(cur) >= max_words or cur[-1]["end"] - cur[0]["start"] >= max_len
+            end_here = ((too_long and not re.search(r"[.!?]$", nxt))  # never strand a sentence's last word
                         or re.search(r"[.!?]$", w["text"])
                         or (len(cur) >= 3 and re.search(r"[,;:]$", w["text"])))
             if end_here:
@@ -977,7 +1024,8 @@ def caption_groups(timing: dict, max_words: int = 6, max_len: float = 2.6) -> li
                 cur = []
         if cur:
             groups.append(cur)
-    return [{"start": g[0]["start"], "end": g[-1]["end"], "text": " ".join(w["text"] for w in g)} for g in groups]
+    return [{"start": g[0]["start"], "end": g[-1]["end"], "text": " ".join(w["text"] for w in g),
+             "words": [[w["start"], w["end"]] for w in g]} for g in groups]
 
 
 def cmd_captions(a) -> None:

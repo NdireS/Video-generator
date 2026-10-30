@@ -6,7 +6,14 @@ The composition lives in `<run>/composition/`. Build it with HyperFrames, follow
 
 1. Read `timing.json`: `width`, `height`, `fps`, `total`, `scenes[]`, `vo[]` (with absolute `words[]`), `sfx[]`, `music`.
 2. Copy the media you will show from `research/media/` into `composition/assets/` (images in `assets/img/`, logo in `assets/brand/`). Audio is already in `assets/audio/`.
-3. `index.html` is the root: `data-width`, `data-height` and `data-duration` = `timing.total`. It holds one host per scene and the audio tags, nothing else.
+3. `index.html` is the root: `data-width`, `data-height` and `data-duration` = `timing.total`. It holds one host per scene and the audio tags, and ends with the root's own (empty) timeline, or `check` fails with `missing_timeline_registry`:
+
+```html
+<script>
+  window.__timelines = window.__timelines || {};
+  window.__timelines["main"] = gsap.timeline({ paused: true });
+</script>
+```
 
 ## Scene hosts
 

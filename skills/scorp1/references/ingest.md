@@ -20,7 +20,7 @@
 3. transcribes it for word timings (`npx hyperframes transcribe`, Parakeet or whisper),
 4. compares what was heard with the script and prints a match score.
 
-Below 75% match, the file is probably the wrong line, or the read drifted from the script. Listen to the transcript it heard (in `audio/manifest.json`), and either rename, ask for a regeneration, or update the line's `text` in `plan.json` to what was actually said (captions use the heard words either way).
+Below 75% match, the file is probably the wrong line, or the read drifted from the script. Listen to the transcript it heard (in `audio/manifest.json`), and either rename, ask for a regeneration, or update the line's `text` in `plan.json` to what was actually said (captions show the script's words at the heard times, so the script must match the read).
 
 ## Retime
 
@@ -37,4 +37,4 @@ Platform limits to keep in mind: Instagram Reels and TikTok ads run best under 3
 
 ## Captions
 
-If the style or the person wants captions: `scorp1.py captions <run>` writes `captions.srt` (for upload) and `plan/caption-groups.json` (groups of up to six words, broken at sentence ends, for burning in). The heard words are used, so check names and brand spellings in the groups and fix them there before composing.
+If the style or the person wants captions: `scorp1.py captions <run>` writes `captions.srt` (for upload) and `plan/caption-groups.json` (groups of up to six words, broken at sentence ends, each with its words' start and end times for word-by-word highlights, for burning in). Captions show the script's spelling (or the line's `caption`, such as `stavore.com`) at the times the speech model heard, so a misheard brand name doesn't reach the screen. Read the groups once before composing.

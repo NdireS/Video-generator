@@ -38,7 +38,7 @@ Start from `templates/plan.example.json`. Fields:
 | `voice.gap` | seconds of silence between lines in the same scene |
 | `music` | `source` (`bundled`, `custom`, `elevenlabs`, `none`), `file`, `cues`, `mood`, `prompt` (for ElevenLabs Music), `fallback` (bundled file if theirs never arrives), `volume`, `duck_to` (fraction kept under the voice), `fade_out` |
 | `scenes[]` | in order: `id`, `title`, `min` (shortest it may run), `lead_in` (seconds before its first line), `tail` (seconds held after its last line), `overlap` (seconds it starts before the previous scene ends, for transitions), `visual`, `on_screen_text`, `effects`, `transition_out`, `vo[]` |
-| `scenes[].vo[]` | `id` (`VO01`, `VO02`, ... in reading order across the whole advert), `text` (exactly what is spoken), `direction` (how to say it), `tags` (Eleven v3 audio tags such as `excited`, used only with `eleven_v3`), `pronounce` (`{"word": "how to say it"}`), `gap_after` (overrides `voice.gap`) |
+| `scenes[].vo[]` | `id` (`VO01`, `VO02`, ... in reading order across the whole advert), `text` (exactly what is spoken), `direction` (how to say it), `tags` (Eleven v3 audio tags such as `excited`, used only with `eleven_v3`), `pronounce` (`{"word": "how to say it"}`), `caption` (the written form for on-screen captions when it differs from the spoken text, such as `stavore.com` for "stavore dot com"), `gap_after` (overrides `voice.gap`) |
 | `sfx[]` | `id`, `file` (library path such as `assets/sfx/interface/drop_001.ogg`) **or** `custom` (`filename` such as `SFX01`, `prompt`, `duration`) with a `fallback` file, `volume`, `anchor`, `why` |
 | `sfx[].anchor` | when it plays. `{"scene": "outro", "offset": 0.6}` (from the scene's start; add `"at": "end"` for its end), `{"vo": "VO03", "word": "WhatsApp", "offset": -0.05}` (on a spoken word), `{"vo": "VO03", "at": "end"}`, or `{"time": 4.2}`. Add `"snap": "beat"` or `"snap": "cue"` to pull it onto the music within `snap_window` (0.3s) |
 | `captions` | `enabled`, plus the style's caption look |
@@ -49,7 +49,7 @@ A scene's length is worked out, not typed: it runs from its start until its last
 ## Writing the voiceover
 
 - Write for the ear. One idea per line, one line per scene where possible; a line is one to two sentences.
-- Write numbers, prices and symbols the way they should be said: "two thousand five hundred shillings", "K-S-H" only if they say it that way, "W-W-W dot" never; say "faithpastries dot co dot ke" or show the address on screen and say "link in bio". Put anything that will be said oddly in `pronounce`.
+- Write numbers, prices and symbols the way they should be said: "two thousand five hundred shillings", "K-S-H" only if they say it that way, "W-W-W dot" never; say "stavore dot com" (and give the line a `caption` of `stavore.com`) or show the address on screen and say "link in bio". Put anything that will be said oddly in `pronounce`, and give such lines a `caption` with the written form.
 - Keep the business's own language: if they post in Sheng or mix Swahili and English, the voice can too (set `voice.language` to the main language).
 - The narrator says what the picture can't. Don't read the on-screen text word for word, except in the CTA, where repeating it helps.
 - About 2.6 words a second. A 30-second advert holds about 55–65 spoken words with room for music to breathe.

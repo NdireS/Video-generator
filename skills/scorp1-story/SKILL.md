@@ -64,7 +64,7 @@ If invoked directly (`/scorp1-story <url>`), run `/scorp1 <url> --style story` i
 - On, sentence-style (not word-pop), lower third, light weight, one line where possible, a soft shadow; no highlighting.
 
 ## Call to action
-- Gentle and specific: "Visit us on Kamiti Road" or "Order at faithpastries.co.ke"; logo on brand colour; hold 3s with music resolving.
+- Gentle and specific: "Visit us on Kamiti Road" or "Order at <their website>"; logo on brand colour; hold 3s with music resolving.
 
 ## Avoid
 - Invented biography details; stock footage of people; fast cuts; slams and loud effects; reading the About page verbatim.
