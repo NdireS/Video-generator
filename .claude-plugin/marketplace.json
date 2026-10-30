@@ -1,0 +1,12 @@
+{
+  "name": "scorp1",
+  "description": "Scorp1: a skill-driven advert video editor for businesses.",
+  "owner": { "name": "ndire" },
+  "plugins": [
+    {
+      "name": "scorp1",
+      "source": "./",
+      "description": "Research a business from its website and socials and make an advert video in a chosen style, with an ElevenLabs voiceover pack."
+    }
+  ]
+}

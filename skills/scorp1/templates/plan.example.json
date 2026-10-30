@@ -1,0 +1,105 @@
+{
+  "schema": "scorp1.plan/1",
+  "business": {
+    "name": "Faith Pastries",
+    "slug": "faith-pastries",
+    "url": "https://faithpastries.co.ke",
+    "socials": { "instagram": "https://instagram.com/faithpastries" },
+    "one_liner": "Custom cakes in Juja, ordered straight to Faith on WhatsApp."
+  },
+  "style": "launch",
+  "target_duration": 20,
+  "format": { "aspect": "landscape", "width": 1920, "height": 1080, "fps": 30 },
+  "voice": {
+    "mode": "elevenlabs",
+    "language": "en",
+    "voice_brief": "Warm Kenyan woman in her late twenties, smiling as she speaks, unhurried and proud of her work.",
+    "voice_library_search": "Kenyan female warm narration",
+    "model": "eleven_multilingual_v2",
+    "settings": { "stability": 0.45, "similarity": 0.8, "style": 0.25, "speed": 1.0, "speaker_boost": true },
+    "wps": 2.6,
+    "gap": 0.3
+  },
+  "music": {
+    "source": "bundled",
+    "file": "assets/music/happy-beats-business-moves-vol-12-by-ende-dot-app.mp3",
+    "cues": "assets/music/cues/happy-beats-business-moves-vol-12-by-ende-dot-app.music-cues.json",
+    "mood": "bright, warm, steady 110 BPM",
+    "volume": 0.32,
+    "duck_to": 0.35,
+    "fade_out": 1.5
+  },
+  "scenes": [
+    {
+      "id": "hook",
+      "title": "Hook",
+      "min": 3.0,
+      "lead_in": 0.5,
+      "tail": 0.4,
+      "visual": "Yellow field, the ruracio cake photo inside an arch, headline word by word.",
+      "on_screen_text": ["Your favourite cake plug in Juja"],
+      "effects": ["arch mask reveal", "per-word headline rise"],
+      "transition_out": "yellow wipe",
+      "vo": [
+        { "id": "VO01", "text": "Juja, your favourite cake plug just went online.", "direction": "bright, a smile you can hear", "tags": ["excited"] }
+      ]
+    },
+    {
+      "id": "cakes",
+      "title": "The cakes",
+      "min": 4.0,
+      "overlap": 0.3,
+      "lead_in": 0.3,
+      "tail": 0.5,
+      "visual": "Three real cake photos in circles: birthdays, weddings, bento.",
+      "on_screen_text": ["Birthdays", "Weddings", "Bento"],
+      "effects": ["circle pop-ins on the beat"],
+      "vo": [
+        { "id": "VO02", "text": "Birthdays, weddings, little bento cakes. Every one baked to order.", "direction": "listing, light rhythm" }
+      ]
+    },
+    {
+      "id": "order",
+      "title": "How you order",
+      "min": 6.0,
+      "overlap": 0.3,
+      "lead_in": 0.3,
+      "tail": 0.6,
+      "visual": "The site's cake builder: pick flavour, type the message, tap Order on WhatsApp, the chat bubble lands.",
+      "on_screen_text": ["Pick it. Write it. Send it."],
+      "effects": ["cursor taps", "typing", "chat bubble slide"],
+      "vo": [
+        { "id": "VO03", "text": "Pick your cake, write the message, and send your order straight to Faith on WhatsApp.", "direction": "clear and simple, slight emphasis on WhatsApp" }
+      ]
+    },
+    {
+      "id": "outro",
+      "title": "Outro",
+      "min": 3.5,
+      "overlap": 0.4,
+      "lead_in": 0.4,
+      "tail": 1.2,
+      "visual": "Oxblood flood, Faith Pastries wordmark, web address.",
+      "on_screen_text": ["Faith Pastries", "faithpastries.co.ke"],
+      "effects": ["colour flood", "wordmark settle"],
+      "vo": [
+        { "id": "VO04", "text": "Faith Pastries. Order today.", "direction": "warm sign-off, slower", "pronounce": { "Faith Pastries": "FAYTH PAY-stries" } }
+      ]
+    }
+  ],
+  "sfx": [
+    { "id": "sfx-hook", "file": "assets/sfx/interface/drop_001.ogg", "volume": 0.45, "anchor": { "scene": "hook", "offset": 0.45 }, "why": "headline lands" },
+    { "id": "sfx-cakes", "file": "assets/sfx/casino/card-place-1.ogg", "volume": 0.35, "anchor": { "scene": "cakes", "offset": 0.4, "snap": "beat" }, "why": "first circle pops in" },
+    { "id": "sfx-send", "file": "assets/sfx/ui/mouseclick1.ogg", "volume": 0.5, "anchor": { "vo": "VO03", "word": "WhatsApp", "offset": -0.05 }, "why": "the Order button is tapped as she says WhatsApp" },
+    {
+      "id": "sfx-oven",
+      "custom": { "filename": "SFX01", "prompt": "a small kitchen oven timer ding, warm and soft, single ring", "duration": 1.5 },
+      "fallback": "assets/sfx/impact/impactGlass_light_001.ogg",
+      "volume": 0.4,
+      "anchor": { "scene": "outro", "offset": 0.6, "snap": "cue" },
+      "why": "wordmark settles"
+    }
+  ],
+  "captions": { "enabled": false },
+  "cta": { "text": "Order today", "url": "faithpastries.co.ke" }
+}

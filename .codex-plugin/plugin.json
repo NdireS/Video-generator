@@ -1,0 +1,22 @@
+{
+  "name": "scorp1",
+  "version": "0.1.0",
+  "description": "Turn any business into an advert video: research its website and socials, write the advert in a chosen style, hand back an ElevenLabs voiceover pack, then edit and render to that audio with HyperFrames.",
+  "author": { "name": "ndire" },
+  "license": "MIT",
+  "keywords": ["video", "advert", "marketing", "hyperframes", "elevenlabs", "skill"],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Scorp1",
+    "shortDescription": "Advert videos for any business, in the style you pick.",
+    "longDescription": "Give Scorp1 a business's website or social pages. It researches what the business does and how it uses each platform, writes the advert in a style (launch, product, offer, story, proof, how-to or your own), gives you the voiceover script and sound prompts for ElevenLabs, then edits and renders the full video to your audio with music, sound effects, captions and share copy.",
+    "developerName": "ndire",
+    "category": "Productivity",
+    "capabilities": ["Read", "Write", "Execute"],
+    "defaultPrompt": [
+      "Make an advert video for this business: <website or Instagram link>",
+      "Make a product spotlight advert for <product> from <link>",
+      "Render the Scorp1 video, my ElevenLabs files are in audio-in"
+    ]
+  }
+}

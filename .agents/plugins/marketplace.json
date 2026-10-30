@@ -1,0 +1,12 @@
+{
+  "name": "scorp1",
+  "interface": { "displayName": "Scorp1" },
+  "plugins": [
+    {
+      "name": "scorp1",
+      "source": { "source": "local", "path": "./" },
+      "policy": { "installation": "AVAILABLE", "authentication": "ON_INSTALL" },
+      "category": "Productivity"
+    }
+  ]
+}
