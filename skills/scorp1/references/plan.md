@@ -28,7 +28,8 @@ Start from `templates/plan.example.json`. Fields:
 | `style` | the style name |
 | `target_duration` | seconds the advert should run |
 | `format` | `aspect` (`landscape`, `vertical`, `square`, `portrait`), `width`, `height`, `fps` (30) |
-| `voice.mode` | `elevenlabs`, `kokoro` or `none` |
+| `voice.mode` | `elevenlabs`, `voicestudio`, `kokoro` or `none` |
+| `voice.voicestudio` | with `voicestudio`: `engine`, `preset_voice` or `profile_id`, `speed` |
 | `voice.language` | `en`, `sw`, ... (sets transcription) |
 | `voice.voice_brief` | who the narrator is, in one sentence (age, accent, warmth, energy) |
 | `voice.voice_library_search` | what to type into ElevenLabs' Voice Library |

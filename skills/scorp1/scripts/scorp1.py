@@ -343,7 +343,8 @@ def cmd_pack(a) -> None:
                             duration=plan.get("target_duration"), voice=voice_mode(plan))
     pack = run_dir / "audio-pack"
     voice = plan.get("voice", {})
-    model = voice.get("model", "eleven_multilingual_v2")
+    # audio tags only reach ElevenLabs; a local voice would read them out
+    model = voice.get("model", "eleven_multilingual_v2") if voice_mode(plan) == "elevenlabs" else ""
     wps = voice.get("wps", DEFAULT_WPS)
     lines = vo_lines(plan) if voice_mode(plan) != "none" else []
     for old in (pack / "lines").glob("*.txt"):
@@ -1077,7 +1078,7 @@ def main() -> None:
     s.add_argument("--style", required=True)
     s.add_argument("--format", default="landscape", choices=sorted(FORMATS))
     s.add_argument("--duration", type=float, default=30)
-    s.add_argument("--voice", default="elevenlabs", choices=["elevenlabs", "kokoro", "none"])
+    s.add_argument("--voice", default="elevenlabs", choices=["elevenlabs", "voicestudio", "kokoro", "none"])
     s.add_argument("--product", default=None)
     s.add_argument("--source", action="append", default=[], help="website or social URL (repeatable)")
     s.add_argument("--extra", default=None, help="free-text direction")

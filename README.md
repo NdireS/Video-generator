@@ -44,7 +44,7 @@ Leave `--style` out and Scorp1 recommends one from its research.
   ```bash
   npx hyperframes models install parakeet
   ```
-- An **ElevenLabs** account for the voice (or use `--voice kokoro` for local text-to-speech, or `--voice none` for music only).
+- An **ElevenLabs** account for the voice. Or `--voice voicestudio` to have Scorp1 make the voice itself in [VoiceStudio](#making-the-voice-with-voicestudio) on your PC, `--voice kokoro` for HyperFrames' built-in text-to-speech, or `--voice none` for music only.
 
 ## Install (once, works from every folder)
 
@@ -116,6 +116,16 @@ Everything you need is in `audio-pack/README.md`, written for that advert. In sh
 4. **Custom sounds** (optional): paste each prompt into *Sound Effects* and save as `SFX01.mp3`, … Skip any and Scorp1 uses its built-in library.
 5. **Music** (only if the pack asks): generate in *Music* and save as `music.mp3`.
 6. Put everything in the run's `audio-in/` folder and run `/scorp1 render`.
+
+## Making the voice with VoiceStudio
+
+If the VoiceStudio app is installed, Scorp1 can make the voice itself and go straight from the link to the finished video:
+
+```
+/scorp1 https://stavore.com --style product --voice voicestudio --no-stops
+```
+
+Open VoiceStudio first (it takes a few minutes to start). Scorp1 uses its fast KittenTTS engine, one request per line, about 15-40 seconds each. Add a direction to pick the voice ("male voice", "use my cloned voice"). Leave out `--no-stops` to read and approve the script before the voice is made. In Codex, type `$scorp1` instead of `/scorp1`.
 
 Any other voice tool works the same way (a local text-to-speech app, your own recording): save one file per line as `VO01`, `VO02`, … in `audio-in/`.
 

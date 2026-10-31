@@ -1,6 +1,6 @@
 ---
 name: scorp1
-description: Turn any business into an advert video. Give it the business's website or social pages; Scorp1 researches what the business does and how it shows up online, writes the advert in the chosen style (launch, product spotlight, offer, brand story, social proof, how-to, or a custom style skill), hands back a voiceover script and sound prompts to generate in ElevenLabs, then edits and renders the full video to that audio with music, sound effects, captions and share copy. Use when someone says "/scorp1", "$scorp1", "make an advert for this business", "promo video for this website/Instagram", or "render the scorp1 video".
+description: Turn any business into an advert video. Give it the business's website or social pages; Scorp1 researches what the business does and how it shows up online, writes the advert in the chosen style (launch, product spotlight, offer, brand story, social proof, how-to, or a custom style skill), hands back a voiceover script and sound prompts to generate in ElevenLabs (or makes the voice itself with VoiceStudio or Kokoro), then edits and renders the full video to that audio with music, sound effects, captions and share copy. Use when someone says "/scorp1", "$scorp1", "make an advert for this business", "promo video for this website/Instagram", or "render the scorp1 video".
 ---
 
 # Scorp1
@@ -29,10 +29,10 @@ Two stops are built in, because the voice is made outside:
 | `--format` | `landscape` 16:9, `vertical` 9:16, `square` 1:1, `portrait` 4:5 | the style's default |
 | `--duration` | seconds | the style's default |
 | `--product` | the product, service or offer to feature | none |
-| `--voice` | `elevenlabs` (you generate it), `kokoro` (local, automatic), `none` (music only) | `elevenlabs` |
+| `--voice` | `elevenlabs` (you generate it), `voicestudio` (the local VoiceStudio app, automatic), `kokoro` (local, automatic), `none` (music only) | `elevenlabs` |
 | `--captions` | `on`, `off` | the style's default |
 | `--lang` | voiceover language code | `en` |
-| `--no-stops` | skip approval stops (the audio stop stays unless `--voice` is `kokoro` or `none`) | off |
+| `--no-stops` | skip approval stops (the audio stop stays unless `--voice` is `voicestudio`, `kokoro` or `none`) | off |
 
 Codex users type `$scorp1` instead of `/scorp1`. Free text after the options is creative direction ("make it feel like a Sunday morning", "Sheng is fine", "aim at university students"): keep it in the plan.
 
@@ -68,6 +68,14 @@ Write `plan/storyboard.md` (for people) and `plan/plan.json` (for the helper; te
 
 `scorp1.py pack <run>` writes `audio-pack/`: the step-by-step `README.md`, one paste-ready text file per line, the whole read as `transcript.txt`, the script with directions and pronunciations, the sound design cue sheet, and prompts for any custom sounds or music.
 - `--voice elevenlabs`: show the storyboard in short form, the script lines, and the path to `audio-pack/README.md`. Say: generate the files, put them in the run's `audio-in/` folder, then run `/scorp1 render`. **Stop here.**
+- `--voice voicestudio`: make each line in VoiceStudio (a free local ElevenLabs alternative, http://localhost:3900), then go on to stage 2:
+  1. `curl -s -m 5 http://localhost:3900/health` (in PowerShell type `curl.exe`, since `curl` there is another command). No answer: tell the person to open VoiceStudio and wait about 4 minutes for it to start, and stop; the audio pack still works for ElevenLabs.
+  2. One line at a time, same voice for every line:
+     ```
+     curl -s -m 900 -X POST http://localhost:3900/generate -F "text=<<run>/audio-pack/lines/VOnn.txt" -F engine=kittentts -F preset_voice=<voice> -F language=English -F speed=<speed> -o <run>/audio-in/VOnn.wav
+     ```
+     `text=<file` reads the line from the file, so quotes in the script can't break the command. Defaults: `expr-voice-2-f` at speed 1.12 for a female narrator, `expr-voice-2-m` at 1.05 for a male one; the person's direction wins. A cloned voice: `-F engine=pockettts -F profile_id=<id>` instead (ids from `GET /profiles`). Never the OmniVoice engine: it can take minutes a line on a CPU. KittenTTS is English only; for other languages use the person's choice of engine or `--voice elevenlabs`.
+  3. Expect 15-40 seconds a line (the first one loads the model, about a minute and a half). Record the engine and voice in `plan.json` under `voice.voicestudio` and in `credits.txt`.
 - `--voice kokoro`: generate each line with `npx hyperframes tts <lines/VOnn.txt> --voice <id> --output <run>/audio-in/VOnn.wav` (see `/media-use` for voices and setup), then go on to stage 2.
 - `--voice none`: go straight to stage 2.
 
