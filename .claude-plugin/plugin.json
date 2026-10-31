@@ -1,7 +1,7 @@
 {
   "name": "scorp1",
   "description": "Turn any business into an advert video: research its website and socials, write the advert in a chosen style, hand back an ElevenLabs voiceover pack, then edit and render to that audio with HyperFrames.",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "author": { "name": "ndire" },
   "license": "MIT",
   "keywords": ["video", "advert", "marketing", "hyperframes", "elevenlabs", "skill"]

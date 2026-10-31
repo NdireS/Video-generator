@@ -125,7 +125,12 @@ If the VoiceStudio app is installed, Scorp1 can make the voice itself and go str
 /scorp1 https://stavore.com --style product --voice voicestudio --no-stops
 ```
 
-Open VoiceStudio first (it takes a few minutes to start). Scorp1 uses its fast KittenTTS engine, one request per line, about 15-40 seconds each. Add a direction to pick the voice ("male voice", "use my cloned voice"). Leave out `--no-stops` to read and approve the script before the voice is made. In Codex, type `$scorp1` instead of `/scorp1`.
+Open VoiceStudio first (it takes a few minutes to start). Scorp1 uses its fast KittenTTS engine, one request per line, about 15-40 seconds each. Add a direction to pick the voice ("male voice", "use my cloned voice"). Leave out `--no-stops` to read and approve the script before the voice is made. In Codex, type `$scorp1` instead of `/scorp1`, and give it network access: Codex blocks the network by default, even `localhost`, so it can't reach VoiceStudio or research the business. Either pick **Full access** in the chat's permissions menu, or allow it for good in `~/.codex/config.toml`:
+
+```toml
+[sandbox_workspace_write]
+network_access = true
+```
 
 Any other voice tool works the same way (a local text-to-speech app, your own recording): save one file per line as `VO01`, `VO02`, … in `audio-in/`.
 
